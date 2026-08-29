@@ -61,7 +61,7 @@
   }
   .brand{display:flex;flex-direction:column;gap:3px;margin-bottom:6px}
   .brand .mark{
-    font-family:"Georgia",serif;font-weight:700;letter-spacing:.3px;
+    font-family:"Georgia","Iowan Old Style",serif;font-weight:700;letter-spacing:.3px;
     font-size:23px;color:var(--ink);line-height:1.1;
   }
   .brand .mark .x{color:var(--orange)}
@@ -85,7 +85,7 @@
     width:14px;height:14px;fill:#9aa298}
 
   /* Stepped TOC with colored number chips + connecting rail */
-  nav{font-family:system-ui,-apple-system,sans-serif;font-size:13.5px;position:relative}
+  nav{font-family:system-ui,sans-serif;font-size:13.5px;position:relative}
   nav a.toc{
     position:relative;display:flex;align-items:center;gap:12px;
     color:var(--ink-soft);text-decoration:none;padding:8px 12px 8px 8px;
@@ -97,8 +97,8 @@
     content:"";position:absolute;left:23px;top:-6px;bottom:-6px;width:2px;
     background:var(--line);z-index:0;
   }
-  nav a.toc:first-child::before{top:18px}
-  nav a.toc:last-child::before{bottom:auto;height:18px}
+  nav a.toc.first::before{top:18px}
+  nav a.toc.last::before{bottom:auto;height:18px}
   nav a.toc .num{
     position:relative;z-index:1;flex:0 0 auto;
     width:30px;height:30px;border-radius:9px;
@@ -106,10 +106,10 @@
     font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums;
     color:#fff;box-shadow:0 1px 2px rgba(51,64,58,.18);
   }
-  /* cycle the three earthy accents across the chips */
-  nav a.toc:nth-child(3n+1) .num{background:var(--blue)}
-  nav a.toc:nth-child(3n+2) .num{background:var(--green)}
-  nav a.toc:nth-child(3n)   .num{background:var(--orange)}
+  /* cycle the three earthy accents across the chips (assigned in JS) */
+  nav a.toc.c-blue   .num{background:var(--blue)}
+  nav a.toc.c-green  .num{background:var(--green)}
+  nav a.toc.c-orange .num{background:var(--orange)}
   nav a.toc .label{position:relative;z-index:1}
   nav a.toc:hover{background:#fff;color:var(--ink);transform:translateX(2px);
     box-shadow:var(--shadow)}
@@ -119,8 +119,32 @@
     content:"";position:absolute;left:0;top:8px;bottom:8px;width:4px;border-radius:4px;
     background:var(--orange);
   }
-  nav a.toc:nth-child(3n+1).active::after{background:var(--blue)}
-  nav a.toc:nth-child(3n+2).active::after{background:var(--green)}
+  nav a.toc.c-blue.active::after{background:var(--blue)}
+  nav a.toc.c-green.active::after{background:var(--green)}
+  nav a.toc.c-orange.active::after{background:var(--orange)}
+
+  /* sub-section links */
+  nav .subtoc{display:flex;flex-direction:column;margin:0 0 4px 0}
+  nav .subtoc.hide{display:none}
+  nav a.subitem{
+    position:relative;display:block;text-decoration:none;
+    color:var(--ink-soft);font-size:13px;line-height:1.3;
+    padding:5px 10px 5px 46px;margin:1px 0;border-radius:9px;
+    transition:background .14s,color .14s,transform .14s;
+  }
+  /* short tick connecting each sub-item to the rail */
+  nav a.subitem::before{
+    content:"";position:absolute;left:23px;top:0;bottom:0;width:2px;
+    background:var(--line);
+  }
+  nav a.subitem::after{
+    content:"";position:absolute;left:23px;top:50%;width:11px;height:2px;
+    background:var(--line);
+  }
+  nav .subtoc a.subitem:last-child::before{bottom:50%}
+  nav a.subitem:hover{background:#fff;color:var(--ink);transform:translateX(2px)}
+  nav a.subitem.active{color:var(--ink);font-weight:600}
+  nav a.subitem.hide{display:none}
 
   /* ---------- Main ---------- */
   main{padding:0 0 120px}
@@ -152,7 +176,7 @@
   section > h2 .idx{font-family:system-ui,sans-serif;font-size:14px;font-weight:700;
     color:#fff;background:var(--blue);
     border-radius:8px;padding:3px 9px;flex:0 0 auto}
-  h3{font-size:19px;margin:30px 0 6px;color:var(--ink)}
+  h3{font-size:19px;margin:30px 0 6px;color:var(--ink);scroll-margin-top:20px}
   h4{font-size:15px;font-family:system-ui,sans-serif;letter-spacing:.02em;
     text-transform:uppercase;color:var(--green);margin:22px 0 4px}
   p{margin:12px 0}
@@ -216,6 +240,9 @@
     box-shadow:var(--shadow);transition:transform .1s,border-color .1s}
   .pill:hover{transform:translateY(-1px);border-color:var(--gold)}
   .pill .arr{color:var(--accent);margin-left:5px}
+  .fig-warn{margin:16px 0;text-align:center}
+  .fig-warn img{max-width:340px;width:100%;height:auto;border-radius:10px;
+    border:1px solid var(--line);box-shadow:var(--shadow)}
 
   code{background:var(--code-bg);padding:1px 6px;border-radius:5px;font-size:.9em;
     font-family:"SF Mono",ui-monospace,Menlo,monospace}
@@ -291,7 +318,7 @@
         <p class="lead">Almost every rubric section requires this, and it is where I see the most challenges — so let us break it down.</p>
         <blockquote class="rubric">Demonstration of synthesis and critical integration of substantial and relevant citations from topic resources and current scholarly research (published within the past 5 years) and, where appropriate, biblical sources, is clear, thorough, and insightful.</blockquote>
 
-        <h3>Critical Integration of Substantial &amp; Relevant Citations</h3>
+        <h3 id="synthesis-integration--critical-integration-of-substantial-and-relevant-citations">Critical Integration of Substantial &amp; Relevant Citations</h3>
         <p>In graduate-level writing, you do not want to just <em>slap</em> a citation at the end of a sentence. You want to use your sources <em>thoughtfully</em> to build and support your ideas.</p>
         <div class="defn">
           <div class="term"><b>Critical integration</b> — you explain <em>how</em> each source connects to your point, and you may evaluate it (point out limits, show why it matters, or explain how it supports/complicates your claim).</div>
@@ -306,7 +333,7 @@
         </div>
         <p>Any time you <em>weave</em> — not slap — credible citations into a statement you are making, you are integrating a citation.</p>
 
-        <h3>Synthesis</h3>
+        <h3 id="synthesis-integration--synthesis">Synthesis</h3>
         <p>Synthesis is when you examine where your sources agree (or disagree) and connect them to develop broader conclusions about the topic.</p>
         <blockquote>From Purdue OWL: Do not force a relationship between sources if there is not one — not all sources must complement one another. Highlight relationships clearly. And do not ignore outliers; every perspective matters, even those that disagree with your conclusions.</blockquote>
 
@@ -328,14 +355,8 @@
             </div>
           </div>
         </details>
-      </section>
 
-      <!-- 2 -->
-      <section id="level-up-synthesis">
-        <h2><span class="idx">02</span> Level-Up Your Writing with Synthesis</h2>
-        <p>At a graduate level, you must go beyond summarizing the articles you read — you need to <em>synthesize</em> the literature to show how it all fits together (and how your own experience fits in). The rubrics require it.</p>
-        <p>Synthesizing simply means <b>combining</b>. Instead of just summarizing one author, you put together the ideas and findings of multiple sources and/or your own experience to make an overall point — looking for similarities and differences, and showing the reader where they overlap and where they diverge.</p>
-
+        <p>At a graduate level, you must go beyond summarizing the articles you read — synthesis is what shows how the literature fits together, and where your own experience fits in. Here is the same set of facts written both ways.</p>
         <div class="ex bad">
           <span class="tag">Unsynthesized</span>
           <p style="margin-bottom:0">In a study of online graduate students, Franz (2008) examined 17 females and 18 males and found that more females were comfortable with APA formatting than males. While also studying graduate students, Goldstein (2012) found in a larger study that females felt more comfortable citing sources in APA than males. In experience, my female classmates seem to have a better understanding of APA than the males. <em>(Note: these are made-up facts for illustration.)</em></p>
@@ -347,11 +368,46 @@
         <div class="pill-row">
           <a class="pill" href="https://owl.purdue.edu/owl/research_and_citation/conducting_research/research_overview/synthesizing_sources.html" target="_blank" rel="noopener">Synthesizing Sources — Purdue OWL<span class="arr">↗</span></a>
         </div>
+
+        <h3 id="synthesis-integration--what-makes-a-source-scholarly">What Makes a Source "Scholarly"?</h3>
+        <p>Not everything with an author and a reference list counts. A scholarly source is written by experts, for experts, and reviewed by other experts before it ever reaches you. That last part — the reviewing — is what "scholarly source" is really asking for. Here is how to tell the real thing from a convincing lookalike.</p>
+        <div class="ex good">
+          <span class="tag">What a scholarly source has</span>
+          <p style="margin-bottom:8px">Written by named experts with credentials in the field. Published in an academic journal or by a university or academic press. Includes original research, a methods section or theoretical argument, and a full reference list. Aimed at scholars and students — not the general public.</p>
+          <p style="margin-bottom:0"><b>The tell:</b> you can trace every claim to evidence, and other researchers are expected to build on it or challenge it.</p>
+        </div>
+        <div class="ex bad">
+          <span class="tag">What it is not</span>
+          <p style="margin-bottom:8px">Magazine and news articles, blog posts, most websites (even GCU's), marketing content, and opinion pieces. These can be well-written and even accurate — but they have not been vetted by a panel of experts, and their goal is often to inform quickly or persuade, not to withstand scrutiny.</p>
+          <p style="margin-bottom:0"><b>The tell:</b> no methods, no citations you can chase down, and a writer whose job is readership, not rigor.</p>
+        </div>
+
+        <details>
+          <summary>Peer-reviewed vs. not peer-reviewed <span class="chev">›</span></summary>
+          <div class="body">
+            <div class="defn">
+              <div class="term"><b>What "peer review" means</b> — before publication, other experts read the work anonymously and can demand fixes, or reject it outright. It is quality control by the author's toughest audience: their peers.</div>
+              <div class="term"><b>Peer-reviewed = strongest</b> — a study in a peer-reviewed journal has cleared that gauntlet. This is the gold standard your assignments want. Look for "refereed" or "peer-reviewed" in the database filters.</div>
+              <div class="term"><b>Scholarly ≠ always reviewed</b> — some scholarly work (conference papers, dissertations, some book chapters) is credible but not formally peer-reviewed. Useful, but check what your rubric requires.</div>
+            </div>
+          </div>
+        </details>
+
+        <div class="callout gold"><span class="ico">⚠️</span><div><b>Why a textbook is not always scholarly.</b> Textbooks feel authoritative — thick, cited, written by professors. But a textbook <em>summarizes</em> findings; it rarely presents original research, and most are not peer-reviewed. They are tertiary sources: great for background and orientation, weak as the scholarly evidence a graduate paper is supposed to lean on. Use them to learn the terrain, then cite the primary studies they point you toward.</div></div>
+        <div class="ex bad">
+          <span class="tag">The trap</span>
+          <p style="margin-bottom:0">Citing your textbook as proof of a claim: "Northouse (2022) says transformational leadership works." That is a summary of other people's research — one step removed from the evidence.</p>
+        </div>
+        <div class="ex good">
+          <span class="tag">Better</span>
+          <p style="margin-bottom:0">Follow the textbook to its sources. Find the original Bass or Avolio study it summarized and cite <em>that</em>. Now you are citing the research itself — exactly what the rubric rewards.</p>
+        </div>
+        <p style="text-align:center;color:var(--ink-soft);font-style:italic;margin-top:14px">The test: expert-written → peer-reviewed → traceable evidence.</p>
       </section>
 
-      <!-- 3 -->
+      <!-- 2 -->
       <section id="credibility">
-        <h2><span class="idx">03</span> A Note on Writing &amp; Citing: Credibility</h2>
+        <h2><span class="idx">02</span> A Note on Writing &amp; Citing: Credibility</h2>
         <p>You want a graduate degree for real reasons — advancement, leadership, <b>credibility</b> in your field. APA style provides a standardized format for clear, concise communication, and correct grammar keeps your work free of errors that undermine credibility. Both are things every leader needs.</p>
         <p>Beyond avoiding plagiarism lies <b>critical thinking</b>. As a future graduate, you must think critically — and that starts with shedding bias and questioning your own reasoning. So when you state an opinion (<em>says you</em>), back it with credible evidence (<em>says who</em>) to check your thinking and earn credibility.</p>
 
@@ -364,12 +420,9 @@
           <p style="margin-bottom:0">"Regular physical activity lowers the risk of chronic diseases such as heart disease and diabetes (Warburton et al., 2006)." Citing credible research makes the statement trustworthy, lets readers verify the claim, and gives <b>you</b> credibility.</p>
         </div>
         <div class="callout"><span class="ico">⚖️</span><div>If you cannot find evidence to support your statement, you probably should not be making it. That is credibility.</div></div>
-      </section>
 
-      <!-- 4 -->
-      <section id="citing-sources">
-        <h2><span class="idx">04</span> A Note on Citing Sources</h2>
-        <p>You are writing at a graduate level now, so you will be held to a higher standard — and we want to avoid plagiarism at all costs. Citations support academic integrity, build credibility, strengthen your arguments, and place your work within the broader scholarly conversation.</p>
+        <h3 id="credibility--when-to-cite-your-sources">When to Cite Your Sources</h3>
+        <p>You are writing at a graduate level now, so you will be held to a higher standard — and we want to avoid plagiarism at all costs. Beyond integrity, citations strengthen your arguments and place your work within the broader scholarly conversation.</p>
 
         <h4>Use an in-text citation whenever you…</h4>
         <details>
@@ -401,9 +454,9 @@
         </div>
       </section>
 
-      <!-- 5 -->
+      <!-- 3 -->
       <section id="peer-reviewed">
-        <h2><span class="idx">05</span> Peer-Reviewed Is Best</h2>
+        <h2><span class="idx">03</span> Peer-Reviewed Is Best</h2>
         <p>Without refuting popular business or leadership "gurus" — many give excellent advice — use <em>caution</em> when citing or modeling your leadership after authors who do not rely on research or peer review. Lacking that quality control, some sources present unverified claims, personal opinions, or misinformation.</p>
         <p>Peer review minimizes personal bias by having independent experts challenge assumptions and identify flaws, promoting a balanced, objective presentation. So read everything that interests you — but stay mindful of advice that may be biased:</p>
         <ul>
@@ -415,9 +468,9 @@
         <div class="callout gold"><span class="ico">🧠</span><div><b>Become a critical thinker.</b> Example: I really like Simon Sinek — inspiring! — but I know he does not research or use peer review. I still read and share him; I am just careful about what I take into practice, and I verify claims with other sources before acting on them.</div></div>
       </section>
 
-      <!-- 6 -->
+      <!-- 4 -->
       <section id="substantive">
-        <h2><span class="idx">06</span> Substantive vs. Non-Substantive Posts</h2>
+        <h2><span class="idx">04</span> Substantive vs. Non-Substantive Posts</h2>
         <p>Your weekly participation must be <b>substantive</b> — it is a large part of how you learn here. A substantive response adds value: thought-out, thought-provoking ideas, insight, analysis, or a counterpoint. A non-substantive response lacks depth, insight, and connection to the materials.</p>
         <div class="ex good">
           <span class="tag">Substantive</span>
@@ -430,9 +483,9 @@
         </div>
       </section>
 
-      <!-- 7 -->
+      <!-- 5 -->
       <section id="dq-example">
-        <h2><span class="idx">07</span> Graduate-Level Discussion Post Example</h2>
+        <h2><span class="idx">05</span> Graduate-Level Discussion Post Example</h2>
         <p>Before responding to any DQ, read the question fully and answer <em>each</em> part. Start an outline with a heading for each component — it helps you answer everything and helps me find your answers. Use clear structure (new thought = new paragraph), cite properly in APA, and keep a professional-but-conversational tone.</p>
         <div class="callout"><span class="ico">📏</span><div>Initial DQ posts must be <b>150–250 words</b> (not counting references). See the Welcome Announcement for details.</div></div>
         <details>
@@ -454,28 +507,29 @@
         </details>
       </section>
 
-      <!-- 8 -->
+      <!-- 6 -->
       <section id="contractions">
-        <h2><span class="idx">08</span> Contractions!</h2>
+        <h2><span class="idx">06</span> Contractions!</h2>
         <p>Do not use contractions in academic writing. Because so many former students were not sure what counted, here is the reminder: contractions are two words shortened and combined with an apostrophe — for example, <code>do not</code> becomes <code>don't</code>, <code>cannot</code> becomes <code>can't</code>, and <code>it is</code> becomes <code>it's</code>. Those shortened forms are reserved for informal communication and should be avoided here.</p>
         <div class="callout gold"><span class="ico">🎓</span><div>Contractions are generally fine in undergraduate work, but <b>graduate-level writing requires a more professional tone</b> that reflects the standards of someone pursuing an advanced degree.</div></div>
       </section>
 
-      <!-- 9 -->
+      <!-- 7 -->
       <section id="ai">
-        <h2><span class="idx">09</span> Artificial Intelligence (AI)</h2>
-        <h3>AI Anxiety</h3>
+        <h2><span class="idx">07</span> Artificial Intelligence (AI)</h2>
+        <h3 id="ai--ai-anxiety">AI Anxiety</h3>
         <p>Some of you may feel anxiety or confusion about AI — that is normal; we are all learning this tool in academia. The first time I see inappropriate use, I will call it out, but I will not discount your grade (unless it is an egregious abuse). GCU has short FAQ videos covering learning verification, disclosure, academic integrity, authorship, appropriate vs. inappropriate use, and why GCU does not use AI detectors.</p>
 
-        <h3>GCU's AI Policy</h3>
-        <p>GCU allows <b>certain uses</b> of AI. Using AI to <em>assist</em> with classwork and support your learning is encouraged — brainstorming, finding a better way to say something, linking thoughts, checking grammar — provided it <b>enhances</b> your work without replacing your understanding.</p>
+        <h3 id="ai--gcu-s-ai-policy">GCU's AI Policy</h3>
+        <p>GCU allows <b>certain uses</b> of AI. Using AI to <em>assist</em> with classwork and support your learning is encouraged — brainstorming ideas, understanding a concept, seeing a topic from another angle, or asking for feedback on what you wrote — provided it <b>enhances</b> your work without replacing your understanding.</p>
         <div class="ex bad">
           <span class="tag">Not allowed</span>
           <p style="margin-bottom:0">Using AI to <b>do your work for you.</b> This inhibits learning and is academic dishonesty. You must maintain ownership of your coursework — the thoughts and analyses must be your own.</p>
         </div>
         <div class="ex good">
           <span class="tag">Allowed (with disclosure)</span>
-          <p style="margin-bottom:0">AI-<em>assisted</em> learning: "help me understand this concept," "help me see this another way," "help me say this better." Anytime you use AI, you <b>must</b> clearly disclose how — summarize its role and attribute ideas or phrasing that came from it. Transparency is part of academic integrity.</p>
+          <p style="margin-bottom:8px">AI-<em>assisted</em> learning: "help me understand this concept," "help me see this another way," "give me feedback on the paragraph I wrote." Anytime you use AI, you <b>must</b> clearly disclose how — summarize its role and attribute ideas or phrasing that came from it. Transparency is part of academic integrity.</p>
+          <p style="margin-bottom:0"><b>Best practice:</b> always ask AI for <b><u>feedback</u></b> on what you wrote. Never ask AI to write, edit, or rewrite for you.</p>
         </div>
 
         <details>
@@ -485,13 +539,29 @@
             <div class="pill-row">
               <a class="pill" href="https://ssc.gcu.edu/" target="_blank" rel="noopener">AI Assistance Center<span class="arr">↗</span></a>
               <a class="pill" href="https://libguides.gcu.edu/GenerativeAI" target="_blank" rel="noopener">Getting Started — Generative AI<span class="arr">↗</span></a>
-              <a class="pill" href="https://devrow-hosting.s3.us-east-2.amazonaws.com/ssc/ai/25REA0025-StudentAIPolicyNOSummary.pdf" target="_blank" rel="noopener">GCU's Student AI Policy (PDF)<span class="arr">↗</span></a>
+              <a class="pill" href="https://aws-files.gcu.edu/ssc/AI/GCUStudentAIStatement.pdf" target="_blank" rel="noopener">GCU's Student AI Policy (PDF)<span class="arr">↗</span></a>
               <a class="pill" href="https://ssc.gcu.edu/" target="_blank" rel="noopener">Student AI Resource Hub<span class="arr">↗</span></a>
             </div>
           </div>
         </details>
 
-        <h3>Proper (and Not-So-Proper) Use of AI</h3>
+        <h3 id="ai--improper-use-of-ai-incorporating-citations">Improper Use of AI — Incorporating Citations</h3>
+        <figure class="fig-warn">
+          <img src="data:image/png;base64,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" alt="Danger, Warning, and Caution signs">
+        </figure>
+        <div class="callout"><span class="ico">⛔</span><div><b>Never ask AI to incorporate citations into your writing for you, or to synthesize sources for you.</b> Critical integration and synthesis of scholarly sources is <em>key</em> to critical thinking and to learning and applying course material. <b>You</b> need to link scholarly research to your thinking — not ask AI to do it for you.</div></div>
+        <p>You <b>can</b> ask AI to help you find a scholarly source on a particular subject — but after you personally locate, read, and verify the source, <b>you</b> must critically integrate it into your paper, and your thinking, yourself. (See <b>Careful Use of AI — Allowing AI to Find Sources for You</b>, below.)</p>
+        <p>Once you write your words, integrate the scholarly sources, and attempt to synthesize them <b>yourself</b>, then you may ask AI for <b><u>feedback</u></b> on how to improve sentence and paragraph structure, formatting, citations, and references. Ask AI for <b><u>feedback</u></b> on your source integration and synthesis — never ask AI to integrate for you, synthesize for you, or fix it for you.</p>
+        <p style="margin-bottom:8px">Examples of useful (and academically appropriate) AI prompts:</p>
+        <ol>
+          <li>Does the way I have incorporated this source make sense, or do you see any area where I am lacking clarity: [paste your text here].</li>
+          <li>Can you give me <b><u>feedback</u></b> on how well I synthesized the sources in this paragraph: [paste your text here].</li>
+          <li>Can you help me understand how biblical principles play into servant leadership, including any specific verses that would apply?</li>
+        </ol>
+        <div class="callout gold"><span class="ico">📖</span><div>If AI gives you a verse and you do not own a Bible, go to <a href="https://www.biblegateway.com/" target="_blank" rel="noopener">BibleGateway.com<span class="arr">↗</span></a> — a searchable online Bible in over 150 versions and 50 languages — to look up and read the verse. You may then use BibleGateway.com as your biblical reference.</div></div>
+
+        <h3 id="ai--careful-use-of-ai-allowing-ai-to-find-sources-for-you">Careful Use of AI — Allowing AI to Find Sources for You</h3>
+        <div class="callout"><span class="ico">🔎</span><div>You may ask AI to help you find topical scholarly sources. <b>However,</b> you must personally locate, read, and verify every source AI gives you before you cite it in a DQ or assignment. Anything less is academic dishonesty.</div></div>
         <div class="callout"><span class="ico">⛔</span><div><b>Do not use AI to find sources <em>after</em> you write.</b> Hunting for articles that agree with what you already said flips the academic process backward — sources should inform and shape your thinking, not validate it after the fact.</div></div>
         <p>Here is why it matters:</p>
         <ul>
@@ -502,16 +572,16 @@
         </ul>
         <p>A better approach: start with a question, use sources to map what credible authors say, then write your point and cite the most relevant source(s). If you do draft first, the next step is not "find a source that agrees" — it is "check whether research supports, complicates, or contradicts this, and revise accordingly."</p>
 
-        <h3>Citing AI vs. Attributing AI</h3>
+        <h3 id="ai--citing-ai-vs-attributing-ai">Citing AI vs. Attributing AI</h3>
         <div class="defn">
           <div class="term"><b>Citing AI</b> — formally referencing AI-generated content, like a book or article, when you directly quote, paraphrase, or incorporate it. Treat the tool as author, include the model/platform, date of access, and URL. <br><br><b>Reference:</b> OpenAI. (2025, March 20). ChatGPT [Large language model]. https://chat.openai.com/ <br><b>In-text:</b> (OpenAI, 2026).</div>
           <div class="term"><b>Attributing AI</b> — a broader acknowledgment of the tool's role without a formal reference. Put a note after the last paragraph of the section where it was used. <br><br><b>Example:</b> "I used ChatGPT to generate initial summaries of key concepts, which informed my writing; however, I did not quote or paraphrase any of the material."</div>
         </div>
       </section>
 
-      <!-- 10 -->
+      <!-- 8 -->
       <section id="business-writing">
-        <h2><span class="idx">10</span> Effective Business Writing</h2>
+        <h2><span class="idx">08</span> Effective Business Writing</h2>
         <p>Assignments in this class call for a business writing <em>style</em> to approximate the professional setting. Review the resources under the Business Writing category on the college page of the Student Success Center, and the attached "Effective Business Writing" guide, which summarizes the differences between academic and business writing.</p>
         <div class="callout gold"><span class="ico">📚</span><div><b>Remember the rubric:</b> most assignments require synthesis and critical integration of substantial and relevant citations (plural) from topic resources and <b>current</b> scholarly research published within the past 5 years. Cite and reference using APA per the Style Guide in the Student Success Center.</div></div>
         <div class="pill-row">
@@ -520,9 +590,9 @@
         </div>
       </section>
 
-      <!-- 11 -->
+      <!-- 9 -->
       <section id="powerpoint">
-        <h2><span class="idx">11</span> PowerPoint Presentation Support</h2>
+        <h2><span class="idx">09</span> PowerPoint Presentation Support</h2>
         <p>A recorded PowerPoint presentation is a course requirement. The platform does not matter — as long as I can access, view, and hear it. I should be able to <b>see you, hear you, and see your slides</b> in the recording.</p>
         <div class="callout"><span class="ico">☁️</span><div>Do not upload the recording directly — it is too large. Upload it to "the cloud," then paste only the <b>link</b> to the file. Put that link on <b>slide 1</b> so I can find it. Verify the recording is not set to "private," and test that it works before linking.</div></div>
         <div class="pill-row">
@@ -532,14 +602,13 @@
         </div>
       </section>
 
-      <!-- 12 -->
+      <!-- 10 -->
       <section id="free-tools">
-        <h2><span class="idx">12</span> Free Tools!</h2>
-        <p>There is no excuse for spelling and grammar errors in this day and age — the card catalog and Dewey decimal days are gone! While you are learning to write, there is no shame in using the tools available. Sites like Grammarly and QuillBot offer free grammar checks; some even check APA formatting (just be sure you select <b>APA 7th ed.</b>). Use them as a <b>tool</b>, not a crutch. Easy peasy lemon squeezy.</p>
+        <h2><span class="idx">10</span> Free Tools!</h2>
+        <p>There is no excuse for spelling and grammar errors in this day and age — the card catalog and Dewey decimal days are gone! While you are learning to write, there is no shame in using the tools available. Sites like QuillBot flag possible spelling and grammar issues, and some even check APA formatting (just be sure you select <b>APA 7th ed.</b>). Read <em>why</em> each suggestion is made and decide for yourself — use them as a <b>tool</b> to learn from, not a crutch. Easy peasy lemon squeezy.</p>
         <div class="pill-row">
           <a class="pill" href="https://www.grammarcheck.net/editor/" target="_blank" rel="noopener">Free Grammar Checker<span class="arr">↗</span></a>
           <a class="pill" href="https://quillbot.com/grammar-check" target="_blank" rel="noopener">QuillBot Grammar Checker<span class="arr">↗</span></a>
-          <a class="pill" href="https://www.grammarly.com/docs" target="_blank" rel="noopener">Grammarly Docs<span class="arr">↗</span></a>
           <a class="pill" href="https://www.mybib.com/tools/apa-citation-generator" target="_blank" rel="noopener">Free APA Citation Generator<span class="arr">↗</span></a>
         </div>
         <div class="callout"><span class="ico">🤖</span><div>And a reminder of GCU's AI policy: AI is <b>not</b> forbidden — you just need to learn to use it ethically, to <b>enhance</b> your learning, not disrupt it.</div></div>
@@ -560,21 +629,43 @@
   // Build TOC from sections
   const sections = [...document.querySelectorAll('main section')];
   const toc = document.getElementById('toc');
-  const links = [];
-  sections.forEach(s=>{
+  const links = [];        // top-level section links
+  const sublinks = [];     // sub-section links
+  const cycle = ['c-blue','c-green','c-orange'];
+  sections.forEach((s,i)=>{
     const h2 = s.querySelector('h2');
     const idx = h2.querySelector('.idx').textContent.trim();
     const title = h2.textContent.replace(idx,'').trim();
     const a = document.createElement('a');
-    a.className='toc';
+    a.className='toc '+cycle[i%3];
+    if(i===0) a.classList.add('first');
+    if(i===sections.length-1) a.classList.add('last');
     a.href='#'+s.id;
     a.innerHTML='<span class="num">'+idx+'</span><span class="label">'+title+'</span>';
     a.dataset.text = title.toLowerCase();
     toc.appendChild(a);
     links.push({a, s});
+
+    // sub-section links from this section's h3 headings
+    const subs = [...s.querySelectorAll('h3[id]')];
+    if(subs.length){
+      const wrap = document.createElement('div');
+      wrap.className='subtoc';
+      subs.forEach(h3=>{
+        const st = h3.textContent.trim();
+        const sa = document.createElement('a');
+        sa.className='subitem';
+        sa.href='#'+h3.id;
+        sa.textContent = st;
+        sa.dataset.text = st.toLowerCase();
+        wrap.appendChild(sa);
+        sublinks.push({a:sa, el:h3, group:wrap, parent:a});
+      });
+      toc.appendChild(wrap);
+    }
   });
 
-  // Scroll spy
+  // Scroll spy — sections
   const spy = new IntersectionObserver(entries=>{
     entries.forEach(e=>{
       if(e.isIntersecting){
@@ -584,15 +675,38 @@
   },{rootMargin:'-20% 0px -70% 0px'});
   sections.forEach(s=>spy.observe(s));
 
-  // Filter
+  // Scroll spy — sub-headings
+  if(sublinks.length){
+    const subspy = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          sublinks.forEach(l=>l.a.classList.toggle('active', l.el===e.target));
+        }
+      });
+    },{rootMargin:'-25% 0px -70% 0px'});
+    sublinks.forEach(l=>subspy.observe(l.el));
+  }
+
+  // Filter — matches section titles and sub-item titles
   const filter = document.getElementById('filter');
   const noresult = document.getElementById('noresult');
   filter.addEventListener('input',()=>{
     const q = filter.value.trim().toLowerCase();
     let shown=0;
     links.forEach(l=>{
-      const match = !q || l.a.dataset.text.includes(q);
+      const subs = sublinks.filter(sl=>sl.parent===l.a);
+      const selfMatch = !q || l.a.dataset.text.includes(q);
+      let subShown=0;
+      subs.forEach(sl=>{
+        const m = !q || selfMatch || sl.a.dataset.text.includes(q);
+        sl.a.classList.toggle('hide', !m);
+        if(m) subShown++;
+      });
+      // section shows if it matches OR any of its sub-items match
+      const anySub = subs.some(sl=>!sl.a.classList.contains('hide'));
+      const match = selfMatch || anySub;
       l.a.classList.toggle('hide', !match);
+      if(subs.length) subs[0].group.classList.toggle('hide', !match);
       if(match) shown++;
     });
     noresult.style.display = shown? 'none':'block';
